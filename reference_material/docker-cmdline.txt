@@ -1,0 +1,23 @@
+Docker Commands Feb 17/2020: (https://www.youtube.com/watch?v=CcxbHkqzJuI&list=PLVmRRBrc2pRCMoXe30tnc3mqY6wBBu3z8&index=3&t=0s)
+
+docker run [IMAGE NAME] [START CMD]
+docker search [TEXT]
+docker pull [IMAGE RUN] - download to local image repository
+docker images - show available images
+docker ps - show existing container information 
+docker start -a [HASH] - attach the stdout of the docker container to the current executing terminal
+docker run -it [IMAGE NAME] [START CMD] - log in with a 'interactive terminal' to the container
+    ex/ docker run -it alpine sh
+docker exec [CMD] [CONTAINER HASH] - runs the command on a running container
+
+docker stop / kill
+
+docker create - creates a container with default /bin/sh
+
+docker run --name SKEMPERMAN_CONTAINER to name a new container
+
+run vs create vs start
+
+    - run attempts an image pull (download) from registry if it doesn't exist (all-inclusive)
+    - create also pulls an image, but just creates the container, doesn't actually run the container???!?!?!
+    - start obviously 'runs' a command on an existing (active) container, but doesn't pull or anything

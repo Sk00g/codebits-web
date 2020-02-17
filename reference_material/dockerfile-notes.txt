@@ -1,0 +1,13 @@
+FROM "alpine"
+
+RUN [EXECUTABLE COMMAND LIKE npm install]
+
+CMD [Run on startup??]
+
+build image from docker file with 'docker build .' (current dir)
+
+COPY [WHERE FROM] [WHERE TO] (ex/ COPY . .)
+
+* Don't forget portmapping! *
+
+docker un -p [HOST MACHINE]:[CONTAINER MAPPED PORT] hg
