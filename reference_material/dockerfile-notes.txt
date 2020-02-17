@@ -28,3 +28,4 @@ CMD ["npm", "start"]
 
 ------------------------
 
+WORKDIR [DIR PATH] - No '.' will equal this value
