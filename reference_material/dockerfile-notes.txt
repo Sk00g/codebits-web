@@ -10,4 +10,21 @@ COPY [WHERE FROM] [WHERE TO] (ex/ COPY . .)
 
 * Don't forget portmapping! *
 
-docker un -p [HOST MACHINE]:[CONTAINER MAPPED PORT] hg
+docker run -p [HOST MACHINE]:[CONTAINER MAPPED PORT] [REPO:TAG]
+
+docker build . -t [REPO:TAG] - tag is normally for versioning
+
+* I didn't fully understand on the order of things, but when changing the COPY command before the RUN npm install section, it would copy everything over every time even if the change didn't affect the package.json (npm install), which is obviously not ideal. To change this he changed the COPY . . to COPY package.json ., then added a second COPY command below the RUN command, like so:
+
+FROM "alpine"
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+
+CMD ["npm", "start"]
+
+------------------------
+
