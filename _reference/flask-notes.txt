@@ -1,0 +1,6 @@
+* Startup hints from offical quickstart tutorial ---
+set FLASK_APP=app.py
+set FLASK_ENV=development/production
+flask run --host=0.0.0.0 for publicly accessible server (listen on all public IPs, otherwise local only by default)
+
+* You can handle uploaded files with Flask easily. Just make sure not to forget to set the enctype="multipart/form-data" attribute on your HTML form, otherwise the browser will not transmit your files at all.*

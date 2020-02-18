@@ -1,0 +1,3 @@
+DEBUG = True
+
+FLASK_PORT = 3000
