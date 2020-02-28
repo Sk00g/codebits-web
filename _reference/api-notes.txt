@@ -1,0 +1,12 @@
+------------------------------
+:TITLE: API Notes
+:PROJECT: codebits-web
+:DATE: 2020/02/27 23:10
+:AUTHOR: Scott Kemperman
+------------------------------
+
+--------------- :Endpoints: ---------------
+    - / (SPA)
+    - /categories/<ID>              GET POST PATCH DELETE 
+    - /tags                         GET POST PATCH DELETE
+    - /codebits/<ID>?[PAGINATION]   GET POST PATCH DELETE

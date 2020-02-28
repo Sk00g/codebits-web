@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, abort
 
 app = Flask(__name__)
@@ -17,9 +18,10 @@ def get_index():
     if request.method == 'POST' and request.files:
         print(request.files)
         f = request.files['imageFile']
-        f.save('./static/images/something.pdf')
+        f.save('./static/images/%s' % f.filename)
 
     return render_template('index.html')
+    # return "<h1>HELLO Azure. Took you long enough...</h1>"
 
 @app.route('/api/categories', methods=['GET', 'POST'])
 @app.route('/api/categories/<id>', methods=['GET', 'PUT', 'DELETE'])
@@ -36,3 +38,7 @@ def codebits(id=None):
     print(request.args)
     
     return "Codebits"
+
+@app.route('/api/files', methods=['GET'])
+def files():
+    return str(os.listdir('./static/images'))
