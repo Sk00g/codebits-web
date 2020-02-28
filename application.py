@@ -8,7 +8,7 @@ app.config.from_object('conf.default')
 
 @app.route('/', methods=['GET', 'POST'])
 def get_index():
-    return dict(name='Scott', age=27)
+    # return dict(name='Scott', age=27)
 
     # abort(404)
 
