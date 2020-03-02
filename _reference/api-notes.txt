@@ -7,6 +7,43 @@
 
 --------------- :Endpoints: ---------------
     - / (SPA)
-    - /categories/<ID>              GET POST PATCH DELETE 
-    - /tags                         GET POST PATCH DELETE
-    - /codebits/<ID>?[PAGINATION]   GET POST PATCH DELETE
+
+    - api/categories/<ID>              GET POST PUT DELETE 
+    
+    - api/tags                         GET POST PUT DELETE
+    
+    - api/codebits/<ID>                GET POST PUT DELETE
+        * GET    ?search=[SEARCH_TEXT]&category=[CATEGORY]&tags=[TAG1,TAG2,etc...]&afterDate=[YYYYmmdd]&beforeDate=[YYYYmmdd]&limit=[INT]&page=[PAGINATION]
+    
+    - api/autocomplet?input=[CONTENT]  GET
+        * Returns a list of suggestedCategories and suggestedTags with associated confidence
+
+--------------- :Error Handling: ---------------
+
+API Error Response Format:
+{
+    'code': [ERROR CODE],
+    'message': [ERROR MESSAGE]
+}
+
+Intentional choice to only return a single error message and no data, as the API is very simple. 
+In the case of multiple validation errors, only the first error found will be returned.
+
+HTTP Errors Used: 400, 401, 404, 405
+
+HTTP 400 Error Codes and messages are found inside an utils.py AppError enumeration class
+
+--------------- :Error Considerations: ---------------
+
+# Generic HTTP error response format
+# Bad URL (404) response
+# Method not allowed response (405)
+# Invalid ID but valid URL (GET, PUT, DELETE)
+# Invalid Post data (400)
+# Duplicated Post data (400)
+# Invalid Put data (400)
+# ID does not exist
+# random data not in schema
+# Database connection error
+* Other database error - How to emulate this error!?
+
