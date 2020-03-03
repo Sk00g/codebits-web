@@ -1,7 +1,9 @@
-:LAST UPDATE:		2020/03/01 23:06
+:LAST UPDATE:		2020/03/02 23:04
 :SYSTEM:			Codebits API
 (Design -> Research -> Prototype -> Write -> Test -> Document)
 :STAGE:				Prototype
 
 :IMMEDIATE:
-Writing the API calls for the codebits data type, currrently in the middle of dealing with file uploads and storage, haven't tested any parts of the API yet still writing
+Finished up the /api/codebits section of the API. File upload and retrieval seems to be working fine. 
+Ready to take these changes to the cloud and test
+After this is working then it's time to design the front-end. Yay.

@@ -46,4 +46,5 @@ HTTP 400 Error Codes and messages are found inside an utils.py AppError enumerat
 # random data not in schema
 # Database connection error
 * Other database error - How to emulate this error!?
-
+* image handler errors
+* file upload error

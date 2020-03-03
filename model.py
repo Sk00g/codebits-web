@@ -1,5 +1,12 @@
 import utils
+from datetime import datetime
 from cerberus import Validator
+
+""" links, codeSnippets, and images come in the format: {
+        'url | text | path': [LINK URL | CODE TEXT | IMAGE PATH],
+        'startChar': [INT]
+    }
+"""
 
 _validators = {
     'categories': Validator({
@@ -19,18 +26,13 @@ _validators = {
         # Core Content
         'title': { 'type': 'string', 'maxlength': 32 },
         'text': { 'type': 'string', 'minlength': 3, 'maxlength': 256 * 1024 },
-        """ links, codeSnippets, and images come in the format: {
-                'url | text | path': [LINK URL | CODE TEXT | IMAGE PATH],
-                'startChar': [INT]
-            }
-        """
-        'links': { 'type': 'list' },
-        'codeSnippets': { 'type': 'list' },
-        'images': { 'type': 'list' },
+        'links': { 'nullable': False },
+        'codeSnippets': { 'nullable': False },
         # Association
         'category': { 'check_with': utils.is_valid_objectid },
-        'tags': { 'type': 'list' },
-    })
+        'tags': { 'nullable': False },
+    },
+    require_all=True)
 }
 
 _collection_settings = {
@@ -41,7 +43,8 @@ _collection_settings = {
         'uniqueFields': ['name']
     },
     'codebits': {
-        'uniqueFields': ['title']
+        'uniqueFields': ['title'],
+        'arrayFields': ['links', 'codeSnippets', 'tags']
     }
 }
 
@@ -61,3 +64,21 @@ def validate_data(object_type, data, db=None):
         return None
     else:
         return utils.capitalize_error_lists(_validators[object_type].errors)[0]
+
+def parse_form_data(form_data, object_type):
+    form_data = form_data.copy()
+
+    for field in form_data:
+        try:
+            date_parsed = datetime.strptime(form_data[field], utils.default.DATETIME_FORMAT)
+            form_data[field] = date_parsed
+        except ValueError:
+            pass
+        except TypeError:
+            pass
+
+    if object_type in _collection_settings and 'arrayFields' in _collection_settings[object_type]:
+        for key in _collection_settings[object_type]['arrayFields']:
+            form_data[key] = form_data.getlist(key)
+
+    return dict(**form_data)

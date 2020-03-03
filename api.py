@@ -2,6 +2,8 @@ import json
 import utils
 import model
 import image_handler
+from conf import default
+from datetime import datetime
 from flask import request, current_app, abort
 from bson.objectid import ObjectId
 from application import app
@@ -27,16 +29,12 @@ def _handle_get(db_collection, db, object_id, collection_singular=None):
 """ Handles a POST operation for a standard 'db_collection' MongoDB collection. Data is validated, and if
     successful an insert_one() operation is executed against the DB, and returns the resulting 'createdId' 
 """
-def _handle_post(db_collection, data, db, files=None):
-
+def _handle_post(db_collection, data, db):
     error = model.validate_data(db_collection, data, db)
     if error:
         utils.abort_400_error(utils.AppError.InvalidData, error)
 
     response = db[db_collection].insert_one(data)
-
-    if response.inserted_id and files:
-        image_handler.store_images(response.inserted_id, files)
 
     return json.dumps(dict(createdId=str(response.inserted_id)))
 
@@ -118,19 +116,46 @@ def tags(tag_id=None):
 
 @app.route('/api/codebits', methods=['GET', 'POST'])
 @app.route('/api/codebits/<codebit_id>', methods=['GET', 'PUT', 'DELETE'])
-def tags(codebit_id=None):
+def codebits(codebit_id=None):
     if current_app.db_error:
         #TODO: Attempt periodic re-connect instead of just accepting the error
         abort(500, current_app.db_error['message'], current_app.db_error['code'])
 
     if request.method == 'GET':
-        return _handle_get('codebits', current_app.db, codebit_id)
+        response = json.loads(_handle_get('codebits', current_app.db, codebit_id))
+
+        if type(response) == 'dict':
+            response['imagePaths'] = image_handler.get_image_paths(response['_id'])
+            return json.dumps(response, indent=4)
+
+        for i in range(len(response)):
+            response[i]['imagePaths'] = image_handler.get_image_paths(response[i]['_id'])
+        return json.dumps(response, indent=4)
 
     if request.method == 'POST':
-        return _handle_post('codebits', dict(**request.form), current_app.db, request.files)
+        response = json.loads(_handle_post('codebits',
+                                           model.parse_form_data(request.form, 'codebits'),
+                                           current_app.db))
+        if response['createdId'] and request.files:
+            image_handler.store_images(response['createdId'], request.files)
+
+        return json.dumps(response)
 
     elif request.method == 'PUT':
-        return _handle_put('codebits', dict(**request.form), current_app.db, codebit_id)
+        response = json.loads(_handle_put('codebits',
+                                          model.parse_form_data(request.form, 'codebits'),
+                                          current_app.db,
+                                          codebit_id))
+        if response['updatedId']:
+            image_handler.delete_images(response['updatedId'])
+            if request.files:
+                image_handler.store_images(response['updatedId'], request.files)
+
+        return json.dumps(response)
 
     elif request.method == 'DELETE':
-        return _handle_delete('codebits', current_app.db, codebit_id)
+        response = json.loads(_handle_delete('codebits', current_app.db, codebit_id))
+        if response['deletedId']:
+            image_handler.delete_images(response['deletedId'])
+
+        return json.dumps(response)

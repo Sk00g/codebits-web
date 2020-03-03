@@ -43,6 +43,7 @@ def get_index():
     # return dict(name='Scott', age=27)
 
     # abort(404)
+#     print(request.args)
 
     # return redirect(url_for('category'))
 
@@ -53,14 +54,6 @@ def get_index():
 
     return render_template('index.html')
     # return "<h1>HELLO Azure. Took you long enough...</h1>"
-
-@app.route('/api/codebits', methods=['GET', 'POST'])
-@app.route('/api/codebits/<id>', methods=['GET', 'PUT', 'DELETE'])
-def codebits(id=None):
-
-    print(request.args)
-
-    return "Codebits"
 
 @app.route('/api/files', methods=['GET'])
 def files():
